@@ -22,16 +22,16 @@ public class UserController {
     public User createUser(@RequestBody User user) {
         log.info("Выполнение запроса на создание нового пользователя {}", user);
 
-        if (user.getEmail().isBlank()) {
-            log.warn("Электронная почта не может быть пустой");
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            log.error("Электронная почта не может быть пустой");
             throw new ConditionsNotMetException("Электронная почта не может быть пустой");
         }
         if (!user.getEmail().contains("@")) {
-            log.warn("Электронная почта должна содержать знак `@` ");
+            log.error("Электронная почта должна содержать знак `@` ");
             throw new ConditionsNotMetException("Электронная почта должна содержать знак `@` ");
         }
-        if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
-            log.warn("логин не может быть пустым и содержать пробелы");
+        if (user.getLogin() != null && (user.getLogin().isBlank() || user.getLogin().contains(" "))) {
+            log.error("логин не может быть пустым и содержать пробелы");
             throw new ConditionsNotMetException("логин не может быть пустым и содержать пробелы");
         }
 
@@ -39,7 +39,7 @@ public class UserController {
             user.setName(user.getLogin());
         }
         if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
-            log.warn("Некорректная дата");
+            log.error("Некорректная дата");
             throw new ConditionsNotMetException("Некорректная дата");
         }
 
@@ -51,20 +51,20 @@ public class UserController {
     //обновление пользователя
     @PutMapping
     public User updateUser(@RequestBody User user) {
-        log.warn("Выполнение запроса на изменение пользователя {}", user);
+        log.info("Выполнение запроса на изменение пользователя {}", user);
         if (user.getId() == null) {
-            log.warn("Id не может быть пустым");
+            log.error("Id не может быть пустым");
             throw new ConditionsNotMetException("Id не может быть пустым");
         }
         if (!users.containsKey(user.getId())) {
-            log.warn("Такой Id не найден");
+            log.error("Такой Id не найден");
             throw new ConditionsNotMetException("Такой Id не найден");
         }
         User oldUser = users.get(user.getId());
-        if (!user.getEmail().isBlank() && user.getEmail().contains("@")) {
+        if (user.getEmail() != null && !user.getEmail().isBlank() && user.getEmail().contains("@")) {
             oldUser.setEmail(user.getEmail());
         }
-        if (!user.getLogin().isBlank() && !user.getLogin().contains(" ")) {
+        if (user.getEmail() != null && !user.getLogin().isBlank() && !user.getLogin().contains(" ")) {
             oldUser.setLogin(user.getLogin());
         }
         if (!user.getName().isBlank()) {

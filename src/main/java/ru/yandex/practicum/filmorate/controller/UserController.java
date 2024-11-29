@@ -30,7 +30,7 @@ public class UserController {
             log.error("Электронная почта должна содержать знак `@` ");
             throw new ConditionsNotMetException("Электронная почта должна содержать знак `@` ");
         }
-        if (user.getLogin() != null &&(user.getLogin().isBlank() || user.getLogin().contains(" "))) {
+        if (user.getLogin() != null && (user.getLogin().isBlank() || user.getLogin().contains(" "))) {
             log.error("логин не может быть пустым и содержать пробелы");
             throw new ConditionsNotMetException("логин не может быть пустым и содержать пробелы");
         }
